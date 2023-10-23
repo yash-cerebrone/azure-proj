@@ -14,7 +14,7 @@ class config:
     SUBSCRIPTION_ID = '94ba27d6-505e-44e4-ae1d-0a39c5296f06'
     RESOURCE_GROUP = 'cerebrone-interns'
     MI_CLIENT_ID = 'f5fa6336-4655-4bdf-97f5-11dec1605857'
-    CONNECTION_STRING = "DefaultEndpointsProtocol=https;AccountName=yashsatrial;AccountKey=u3fqqPGRptWmu4YQ44cy4JZG0O5L0dgJtsUfaKYdk/Aulsl0GR2RrGVTW9uRvCYjF6IhnyLXv5L9+AStTmVjBw==;EndpointSuffix=core.windows.net"
+    CONNECTION_STRING = "DefaultEndpointsProtocol=https;AccountName=yashsatrial;AccountKey=eytOjyiUQpYnS00UnrfbmK8vom4QEclG0SasAqEeVSLJAQq9Ftz3W7rwq/MXtDEC0cWyuSZXs6BL+ASt1N3Zuw==;EndpointSuffix=core.windows.net"
     CONTAINER_NAME='sample-container'
 
 def get_metrics_of_vm(vm_name, resource_group, credential, subscription_id):
