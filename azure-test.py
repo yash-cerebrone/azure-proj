@@ -59,11 +59,12 @@ def get_billing_details(credential, subscription_id):
         print(f"-------------------------------------")
 
 def main(credential):
-    vm_details=[]
-    for i in list_all_vms(credential, config.SUBSCRIPTION_ID):
-        vm_details.append(get_metrics_of_vm(i.name, config.RESOURCE_GROUP, credential, config.SUBSCRIPTION_ID))
+    # vm_details=[]
+    # for i in list_all_vms(credential, config.SUBSCRIPTION_ID):
+    #     vm_details.append(get_metrics_of_vm(i.name, config.RESOURCE_GROUP, credential, config.SUBSCRIPTION_ID))
     # add_to_blob(config.CONNECTION_STRING, config.CONTAINER_NAME, vm_details, i.name)
-    print('\n'.join(map(str, vm_details)))
+    get_billing_details(credential, config.SUBSCRIPTION_ID)
+    
 
 if __name__=='__main__':
     main(get_default_credential())
