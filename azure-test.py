@@ -11,7 +11,7 @@ class config:
     NAME="pythonApp-wasif"
     CONTAINER_NAME='sample-container'
     SUBSCRIPTION_ID = '94ba27d6-505e-44e4-ae1d-0a39c5296f06'
-    CONNECTION_STRING='DefaultEndpointsProtocol=https;AccountName=azuretrialsa;AccountKey=lymlPx6vCGC8c7+ab1mbQmJkLncIHJ4169rBFJLhoTAsnnhkpKdEryiT/SW7e+WWHH6ZuZofq3je+AStHd6/bg==;EndpointSuffix=core.windows.net'
+    CONNECTION_STRING='DefaultEndpointsProtocol=https;AccountName=yashtrailsa;AccountKey=GHFVkFYajz1fbyEW1uZWZgs9L1uFTpnFMKqeiyQ7Q9ymop130yEB2VcgJV2ltDmdA5yN9FD/GSUH+AStQ/GCJg==;EndpointSuffix=core.windows.net'
     RESOURCE_GROUP='myResourceGroup'
 
 def get_default_credential():
