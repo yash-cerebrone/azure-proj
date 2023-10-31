@@ -4,6 +4,8 @@ from azure.storage.blob import BlobServiceClient, BlobClient, ContainerClient
 from azure.mgmt.resource import ResourceManagementClient
 from azure.mgmt.compute import ComputeManagementClient
 from azure.identity import DefaultAzureCredential, UsernamePasswordCredential, ClientSecretCredential, ManagedIdentityCredential
+from azure.mgmt.consumption import ConsumptionManagementClient
+
 
 class config:
     NAME="pythonApp-wasif"
@@ -43,10 +45,25 @@ def add_to_blob(connection_string, container_name, vm_details, vm_name):
     blob_client.upload_blob(json.dumps(vm_details))
     print("Upload successful!")
 
+def get_billing_details(credential, subscription_id):
+    consumption_client = ConsumptionManagementClient(credential, subscription_id)
+    usage_details = consumption_client.usage_details.list()
+
+    for detail in usage_details:
+        print(f"Resource ID: {detail.resource_id}")
+        print(f"Usage Date: {detail.usage_start}")
+        print(f"Meter Name: {detail.meter_name}")
+        print(f"Quantity: {detail.quantity}")
+        print(f"Unit: {detail.unit}")
+        print(f"Billing Amount: {detail.extended_cost['amount']} {detail.extended_cost['currency']}")
+        print(f"-------------------------------------")
+
 def main(credential):
+    vm_details=[]
     for i in list_all_vms(credential, config.SUBSCRIPTION_ID):
-        vm_details=get_metrics_of_vm(i.name, config.RESOURCE_GROUP, credential, config.SUBSCRIPTION_ID)
-        add_to_blob(config.CONNECTION_STRING, config.CONTAINER_NAME, vm_details, i.name)
+        vm_details.append(get_metrics_of_vm(i.name, config.RESOURCE_GROUP, credential, config.SUBSCRIPTION_ID))
+    # add_to_blob(config.CONNECTION_STRING, config.CONTAINER_NAME, vm_details, i.name)
+    print('\n'.join(map(str, vm_details)))
 
 if __name__=='__main__':
     main(get_default_credential())
