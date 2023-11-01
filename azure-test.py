@@ -45,17 +45,19 @@ def add_to_blob(connection_string, container_name, vm_details, vm_name):
     blob_client.upload_blob(json.dumps(vm_details))
     print("Upload successful!")
 
-def get_billing_details(credential, subscription_id):
+def get_billing_details(n, credential, subscription_id):
     consumption_client = ConsumptionManagementClient(credential, subscription_id)
-    usage_details = consumption_client.usage_details.list()
-
+    usage_details = consumption_client.usage_details.list(scope=f'/subscriptions/{subscription_id}/', top=n)
+    # print(usage_details)
     for detail in usage_details:
-        print(f"Resource ID: {detail.resource_id}")
-        print(f"Usage Date: {detail.usage_start}")
-        print(f"Meter Name: {detail.meter_name}")
-        print(f"Quantity: {detail.quantity}")
-        print(f"Unit: {detail.unit}")
-        print(f"Billing Amount: {detail.extended_cost['amount']} {detail.extended_cost['currency']}")
+        for key, val in detail.as_dict().items():
+            print(f"{key}: {val}")
+        # print(f"Resource ID: {detail.resource_id}")
+        # print(f"Usage Date: {detail.usage_start}")
+        # print(f"Meter Name: {detail.meter_name}")
+        # print(f"Quantity: {detail.quantity}")
+        # print(f"Unit: {detail.unit}")
+        # print(f"Billing Amount: {detail.extended_cost['amount']} {detail.extended_cost['currency']}")
         print(f"-------------------------------------")
 
 def main(credential):
@@ -63,7 +65,7 @@ def main(credential):
     # for i in list_all_vms(credential, config.SUBSCRIPTION_ID):
     #     vm_details.append(get_metrics_of_vm(i.name, config.RESOURCE_GROUP, credential, config.SUBSCRIPTION_ID))
     # add_to_blob(config.CONNECTION_STRING, config.CONTAINER_NAME, vm_details, i.name)
-    get_billing_details(credential, config.SUBSCRIPTION_ID)
+    get_billing_details(5, credential, config.SUBSCRIPTION_ID)
     
 
 if __name__=='__main__':

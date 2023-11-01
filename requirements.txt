@@ -3,3 +3,5 @@ azure-mgmt-compute==30.3.0
 azure-mgmt-resource==23.0.1
 azure-storage-blob==12.18.3
 azure-mgmt-consumption==10.0.0
+azure-mgmt-monitor==6.0.2
+prometheus-client==0.18.0
