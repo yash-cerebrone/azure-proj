@@ -34,14 +34,15 @@ def collect_metrics(resource_id, credential, subscription_id):
     azure_metric = Gauge('azure_percentage_cpu', 'Percentage CPU used by the Azure resource')
     # Collect metrics from Azure (use the previous snippet)
     # ...
-    metric_value = get_metric_data(resource_id, credential, subscription_id) # Assume this is the metric value you've collected from Azure
-    azure_metric.set(metric_value)
+    metric_value = get_metric_data(resource_id, credential, subscription_id)['value'][0]['timeseries'][0]['data'] # Assume this is the metric value you've collected from Azure
+    for i in metric_value:
+        azure_metric.set(i)
 
 if __name__ == '__main__':
     # Start up the server to expose the metrics.
     start_http_server(8000)
     resource_id="/subscriptions/94ba27d6-505e-44e4-ae1d-0a39c5296f06/resourcegroups/cerebrone-interns/providers/Microsoft.Compute/virtualMachines/yash-vm-trial"
-    # while True:
-    #     collect_metrics(resource_id, get_default_credential(), config.SUBSCRIPTION_ID)
-    #     time.sleep(60)
-    print(pprint.pprint(get_metric_data(resource_id, get_default_credential(), config.SUBSCRIPTION_ID)))
+    while True:
+        collect_metrics(resource_id, get_default_credential(), config.SUBSCRIPTION_ID)
+        time.sleep(60)
+    # pprint.pprint(get_metric_data(resource_id, get_default_credential(), config.SUBSCRIPTION_ID)['value'][0]['timeseries'][0]['data'])
