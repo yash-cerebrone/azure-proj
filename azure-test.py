@@ -1,5 +1,6 @@
 import json
 import datetime as dt
+import pprint
 from azure.storage.blob import BlobServiceClient, BlobClient, ContainerClient
 from azure.mgmt.resource import ResourceManagementClient
 from azure.mgmt.compute import ComputeManagementClient
@@ -45,27 +46,45 @@ def add_to_blob(connection_string, container_name, vm_details, vm_name):
     blob_client.upload_blob(json.dumps(vm_details))
     print("Upload successful!")
 
+def get_resource_groups(credentials, subscription_id):
+    resource_client = ResourceManagementClient(credentials, subscription_id)
+    resource_groups = resource_client.resource_groups.list()
+    return resource_groups
+
 def get_billing_details(n, credential, subscription_id):
     consumption_client = ConsumptionManagementClient(credential, subscription_id)
     usage_details = consumption_client.usage_details.list(scope=f'/subscriptions/{subscription_id}/', top=n)
     # print(usage_details)
     for detail in usage_details:
-        for key, val in detail.as_dict().items():
-            print(f"{key}: {val}")
+        pprint.pprint(detail.as_dict())
         # print(f"Resource ID: {detail.resource_id}")
         # print(f"Usage Date: {detail.usage_start}")
         # print(f"Meter Name: {detail.meter_name}")
         # print(f"Quantity: {detail.quantity}")
         # print(f"Unit: {detail.unit}")
         # print(f"Billing Amount: {detail.extended_cost['amount']} {detail.extended_cost['currency']}")
-        print(f"-------------------------------------")
+        # print(f"-------------------------------------")
+
+def get_resource_billing(credentials, subscription_id):
+    consumption_client = ConsumptionManagementClient(credentials, subscription_id)
+    for i in get_resource_groups(credentials, subscription_id):
+        
+        cost_data = consumption_client.usage_details.list(
+            scope=f'/subscriptions/{subscription_id}/',
+            filter=f"properties/resourceGroup eq '{i.name}'"
+        )
+        print(cost_data)
+        total_cost = 0.0
+        for item in cost_data:
+            total_cost+=float(item.as_dict()['effective_price'])
+        print(f"Total Cost for Resource Group '{i.name}': {total_cost}")
 
 def main(credential):
     # vm_details=[]
     # for i in list_all_vms(credential, config.SUBSCRIPTION_ID):
     #     vm_details.append(get_metrics_of_vm(i.name, config.RESOURCE_GROUP, credential, config.SUBSCRIPTION_ID))
     # add_to_blob(config.CONNECTION_STRING, config.CONTAINER_NAME, vm_details, i.name)
-    get_billing_details(5, credential, config.SUBSCRIPTION_ID)
+    get_resource_billing(credential, config.SUBSCRIPTION_ID)
     
 
 if __name__=='__main__':
